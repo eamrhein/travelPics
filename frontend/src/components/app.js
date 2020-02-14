@@ -22,7 +22,6 @@ const App = () => (
       <AuthRoute exact path='/signup' component={Register} />
       <ProtectedRoute path="/" component={NavBarContainer} />
     </Switch>
-    <img className="backdrop" alt="backdrop" src="backdrop.png"/>
     <Switch>
       <ProtectedRoute exact path='/panels/liked' component={LikedIndexContainer} />
       <ProtectedRoute exact path='/panels/authored' component={AuthoredIndexContainer} />

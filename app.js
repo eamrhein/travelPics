@@ -8,7 +8,6 @@ const panels = require('./routes/api/panels');
 const images = require('./routes/api/images');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const aws = require('aws-sdk');
 
 mongoose
   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })

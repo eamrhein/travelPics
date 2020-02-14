@@ -1,119 +1,119 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-class PanelForm extends React.Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      panel:{
-        authorId: '',
-        title: '',
-        panelText: '',
-        photoURL: '',
-        childId: [],
-        parentId: null,
-        likes: 0,
-        rootId: null
-      },
-      photoFile: null
-    }
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.photoReader = this.photoReader.bind(this);
-    this.sendPanel = this.sendPanel.bind(this);
-  }
+const PanelForm = (props) => {
+  let [panel, setPanel] = useState({
+    authorId: '',
+    title: '',
+    panelText: '',
+    photoURL: '',
+    childId: [],
+    parentId: null,
+    likes: 0,
+    rootId: null
+  })
+  let [photoFile, setPhotoFile] = useState(null)
 
-  componentDidMount(){
-    if (this.props.formType === 'edit') {
-      this.props.fetchPanel(this.props.match.params.panelId)
-        .then(() => {
-          this.setState({ panel: this.props.panels[this.props.match.params.panelId] })
-        })
-    } else if (this.props.formType === 'branch') {
-      this.props.fetchPanel(this.props.match.params.panelId).then(panel => {
-        let panToCheck = panel.panel.data
-        if (panToCheck.rootId === null){
-          this.setState({ panel: { parentId: this.props.match.params.panelId, rootId: panToCheck.id } })
-        } else {
-          this.setState({ panel: { parentId: this.props.match.params.panelId, rootId: panToCheck.rootId } })
-        }
+  useEffect(()=> {
+    switch (props.formType) {
+      case 'edit':
+        props.fetchPanel(props.match.params.panelId)
+          .then(() => setPanel(props.panels[props.match.params.panelId]))
+        break;
+      case 'branch':
+        props.fetchPanel(props.match.params.panelId)
+          .then((panel) => {
+            let panelToCheck = panel.panel.data
+            if(panelToCheck.rootId === null){
+              setPanel({
+                ...panel, 
+                parentId: props.match.params.panelId,
+                rootId: panelToCheck.id })
+            } else {
+              setPanel({ 
+                ...panel,
+                parentId: props.match.params.panelId, 
+                rootId: panelToCheck.rootId 
+              })
+            }
+          })
+        break
+      default:
+        break;
+    }
+  }, [props]);
+  function handleSubmit(e){
+        e.preventDefault();
+        getSignedPhotoRequest(photoFile);
+      }
+  function handleChange(form){
+    return function(e) {
+      setPanel({
+        ...panel,
+        [form]: e.target.value
       })
     }
   }
-  handleSubmit(e){
-    e.preventDefault();
-    this.getSignedPhotoRequest(this.state.photoFile);
-    //Need logic to handle how we want behavior after action.
-  }
-  handleChange(form){
-    return(e) => {
-      let pannelTochange = this.state.panel;
-      pannelTochange[form] = e.target.value;
-      this.setState({panel: pannelTochange});
-    }
-  }
-
-  sendPanel() {
-    const panel = this.state.panel;
-    panel.authorId = this.props.currentUser.id;
-    this.props.action(panel)
-
+  function sendPanel(){
+    panel.authorId = props.currentUser.id;
+    props.action(panel)
       .then((childPanel) => {
-        if (childPanel.panel.data.parentId && this.props.formType === 'branch') {
-
-          this.props.fetchPanel(childPanel.panel.data.parentId)
-            .then(parentPanel => {
+        if(childPanel.panel.data.parentId && props.formType === 'branch') {
+          props.fetchPanel(childPanel.panel.data.parentId)
+            .then(parentPanel =>{
               parentPanel.panel.data.childIds.push(childPanel.panel.data.id)
-
-              this.props.updatePanel(parentPanel.panel.data)
-                .then(() => (this.props.history.push(`/panels/${childPanel.panel.data.id}`)))
-            }, err => console.log(err));
+              props.updatePanel(parentPanel.panel.data)
+                .then(() => props.history.push(`/panels/${childPanel.panel.data.id}`))
+            },
+             (err) => console.log(err))
         } else {
-          this.props.authorRoot({ userId: this.props.currentUser.id, rootId: childPanel.panel.data.id})
+          props.authorRoot({ userId: props.currentUser.id, rootId: childPanel.panel.data.id})
             .then(() => {
-              this.props.history.push(`/panels/${childPanel.panel.data.id}`)
-
+              props.history.push(`/panels/${childPanel.panel.data.id}`)
             })
         }
-      }, err => console.log(err));
+      }, (err) => console.log(err))
   }
-
-  photoReader(e) {
+  function  photoReader(e) {
     const reader = new FileReader();
     const file = e.currentTarget.files[0];
-    reader.onloadend = () => this.setState({ photoURL: reader.result, photoFile: file });
-    console.log(file.type);
+    reader.onloadend = () => {
+      setPanel({
+        ...panel,
+        photoURL: reader.result
+      })
+      setPhotoFile(file)
+    } 
     if (file && file.type.includes("image")) {
       reader.readAsDataURL(file);
     } else {
-      // set an error here
-      this.setState({ panel: {photoURL: ""}, photoFile: null });
+      setPanel({
+        ...panel,
+        photoURL: reader.result
+      })
+      setPhotoFile(file)
     }
   }
-
-  getSignedPhotoRequest(photo) {
-
+  function getSignedPhotoRequest(photo) {
     const res = axios.get(`/api/images?file-name=${photo.name}&file-type=${photo.type}`)
-      .then( res => {
-          console.log(res);
-          const { signedRequest, url } = res.data;
-          this.uploadFile(photo, signedRequest, url)
-        },
-        err => console.log(err)
-      );
-    console.log(res);
+    .then( res => {
+        console.log(res);
+        const { signedRequest, url } = res.data;
+        uploadFile(photo, signedRequest, url)
+      },
+      err => console.log(err)
+    );
+  console.log(res);
   }
-
-  uploadFile(file, signedRequest, url) {
+  function uploadFile(file, signedRequest, url) {
     const xhr = new XMLHttpRequest();
     xhr.open('PUT', signedRequest);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          const {title, authorId, panelText, childId, parentId, likes, rootId} = this.state.panel;
-          // console.log(url);
-          //const newURL = /com\/.+(\.jpg|\.png|\.gif|\.bmp|\.tiff|\.jpeg).+/.exec(url); newURL[0].slice(4)
-          this.setState({ panel: {photoURL: url, title: title, authorId: authorId, panelText: panelText,
-          childId: childId, parentId: parentId, likes: likes, rootId: rootId}});
-          this.sendPanel();
+          const {title, authorId, panelText, childId, parentId, likes, rootId} = panel;
+          setPanel({photoURL: url, title: title, authorId: authorId, panelText: panelText,
+          childId: childId, parentId: parentId, likes: likes, rootId: rootId});
+          sendPanel();
         }
         else {
           alert('Could not upload file.');
@@ -122,34 +122,31 @@ class PanelForm extends React.Component {
     };
     xhr.send(file);
   }
-
-  render(){
-    return (
-    <form className='create-panel-form' onSubmit={this.handleSubmit}>
-
-      <h1 className='panel-form-title'>{this.props.formType}</h1>
-      <label >
-        Title
-        <input type="text" onChange={this.handleChange('title')} />
-      </label>
-      {/* UNFINISHED FOR AWS */}
-      <label className="image-input">
-      <input id="file-input" type="file" onChange={this.photoReader} />
-      <div className="image-input-label">upload an image</div>
-      {this.state.photoURL ? (<img src={this.state.photoURL} alt={this.state.panel.title} className="image-preview" />) : ""}
-      </label>
-      {/* <label>
-        Photo
-      </label>
-      <input onChange={e => this.setState({})}/> */}
-      <label >
-        Caption
-        <textarea cols="30" rows="10" onChange={this.handleChange('panelText')} value={this.state.panel.panelText}></textarea>
-      </label>
-      <input type="submit" value={this.props.formType}/>
-    </form>)
-  }
+  return(
+    <div>
+      <form className='create-panel-form' onSubmit={handleSubmit}>
+        <h1 className='panel-form-title'>{props.formType}</h1>
+        <label >
+          Title
+          <input type="text" onChange={handleChange('title')} />
+        </label>
+        <label className="image-input">
+          <input id="file-input" type="file" onChange={photoReader} />
+          <div className="image-input-label">
+            upload an image
+          </div>
+          {panel.photoURL ? (<img src={panel.photoURL} alt={panel.title} className="image-preview" />) : ""}
+        </label>
+        <label >
+          Caption
+          <textarea cols="30" rows="10" onChange={handleChange('panelText')} value={panel.panelText}></textarea>
+        </label>
+        <input type="submit" value={props.formType}/>
+    </form>
+    </div>
+  )
 }
+// }
 
 export default PanelForm;
 

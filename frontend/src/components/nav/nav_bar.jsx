@@ -1,45 +1,28 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import InfoModal from '../infoModal/infoModal';
+import { Link, NavLink } from 'react-router-dom';;
 
-class NavBar extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.handleHamburger = this.handleHamburger.bind(this);
+const NavBar = (props) => {
+    const handleHamburger = () => {
+        props.toggleModal("nav-dropdown");
     }
-
-    handleHamburger() {
-        this.props.toggleModal("nav-dropdown");
-    }
-
-    render() {
-        return (
+    return(
         <div className="nav-bar">
             <div>   
-                    <Link to="/"><img className="logo" src="logo512.png" alt="offshoot logo"></img></Link>
-
-                    <div className="info-modal-container" >
-                        {/* <InfoModal  /> */}
-                    </div>
-                
+                <Link to="/">
+                    <img className="logo" src="logo512.png" alt="offshoot logo" />
+                </Link>
             </div>
-
-            
-
-            
-            <div className={this.props.currentModal === "nav-dropdown" ? "dropdown-container open" : "dropdown-container"}>
-                <i className="material-icons dropdown-button" onClick={this.handleHamburger}>menu</i>
+            <div className={props.currentModal === "nav-dropdown" ? "dropdown-container open" : "dropdown-container"}>
+                <i className="material-icons dropdown-button" onClick={handleHamburger}>menu</i>
                 <div className="dropdown">
-                    <div className="dropdown-backdrop" onClick={this.handleHamburger}></div>
+                    <div className="dropdown-backdrop" onClick={handleHamburger}></div>
                     <div className="user-links">
-                            {this.props.authStatus ?
+                            {props.authStatus ?
                             <div>
-                                    <NavLink to={`/users/${this.props.currentUser.id}`}>
+                                    <NavLink to={`/users/${props.currentUser.id}`}>
                                     <span className="username">
                                         <img className="acorn-icon" src="acorn-icon-black.png" alt="acorn icon"></img>
-                                        <span>{this.props.currentUser.username}</span>
+                                        <span>{props.currentUser.username}</span>
                                     </span>
                                     </NavLink>
 
@@ -57,10 +40,10 @@ class NavBar extends React.Component {
                             </div>
                             }
                     </div>
-                    {this.props.authStatus ?
+                    {props.authStatus ?
                     <div className="story-links">
                         <div>
-                            <NavLink to={`/users/${this.props.currentUser.id}`}>My Shoots Link</NavLink>
+                            <NavLink to={`/users/${props.currentUser.id}`}>My Shoots Link</NavLink>
                         </div>
                         <div>
                             <NavLink to={`/panels/liked`}>Liked Roots</NavLink>
@@ -70,9 +53,9 @@ class NavBar extends React.Component {
                         </div>
                     </div> :
                     "" }
-                    {this.props.authStatus ?
+                    {props.authStatus ?
                         <div className="auth-links">
-                                <button onClick={this.props.logout}>
+                                <button onClick={props.logout}>
                                     Sign Out
                                 </button>
                         </div>
@@ -82,7 +65,5 @@ class NavBar extends React.Component {
               </div>
             </div>
         );
-    }
 }
-
 export default NavBar;
