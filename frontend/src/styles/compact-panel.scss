@@ -1,0 +1,186 @@
+.panel-index {
+    .panel {
+        // box-sizing: border-box;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        // margin-bottom: 3%;
+        padding-top: 10px;
+        border-radius: 10px;
+        background-color: $primary;
+        width: 330px;
+    }
+
+    .panel-proper {
+    //   padding: 0.25%;
+    }
+
+    // .share-drawer {
+
+    //     visibility: hidden;
+    //     display: flex;
+    //     flex-direction: row;
+    //     align-items: center;
+    //     top: 200px;
+    //     margin-bottom: 10px;
+    //     border-radius: $small-radius;
+    //     position: absolute;
+    //     z-index: 0;
+
+    //     background-color: $primary;
+    //     padding: 10px;
+
+    //     transition-property: top, visibility;
+    //     transition-duration: 0.5s;
+
+    // }
+
+    // .share-drawer.open {
+    //     visibility: visible;
+    //     top: 390px;
+    //     transition-duration: 0.5s;
+    // }
+
+    figure {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        // justify-content: center;
+        // width: 330px;
+        // overflow: hidden;
+        // padding: 0px 0px;
+        // z-index: 2;
+        // background-color: $primary;
+        // border-radius: 10px;
+
+        img {
+            object-fit: cover;
+            width: 330px;
+            height: 250px;
+        }
+  }
+    .title-and-panel {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    figcaption {
+        display: block;
+        box-sizing: border-box;
+        padding: 10px 10px;
+        z-index: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 10px;
+
+        background-color: $primary;
+
+        .name {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            background-color: $darkest-primary;
+            color: $primary;
+            border-radius: $small-radius;
+            text-align: center;
+            padding: 0 5px;
+            margin-right: 5px;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .panel-action-buttons {
+            float: right;
+            display: flex;
+            flex-direction: column;
+            color: rgba($color: $secondary, $alpha: 0.8);
+            transition-property: color;
+            transition-duration: 0.5s;
+
+            // .like-button:active {
+            //     color: $like-active-color;
+            // }
+
+            .liked {
+                color: $like-active-color;
+                opacity: 0.6;
+            }
+        }
+
+        p {
+
+            margin-top: 5px;
+            margin-bottom: 10px;
+
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    }
+
+    h1 {
+        text-align: left;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline;
+    }
+
+}
+
+.branch-button {
+    transform: rotate(90deg);
+}
+
+.branch-button:hover {
+    color: $darkest-primary;
+}
+
+.material-icons {
+    cursor: pointer;
+}
+
+[class*="-button-container"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+        margin-left: 5px;
+        font-size: 16px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+
+    .panel-index {
+        
+        .name {
+            background-color: $primary;
+            color: $darkest-primary;
+        }
+
+        .branch-button:hover {
+            color: $primary;
+        }
+
+
+        figcaption {
+            background-color: $root;
+
+            .panel-action-buttons {
+                color: rgba($color: black, $alpha: 0.5);
+            }
+        }
+
+        .panel {
+            background-color: $root;
+        }
+
+    }
+
+}
