@@ -27,31 +27,18 @@ const Main = styled.div`
     }
     @media(max-width: 900px) {
         max-height: 700px;
-        height: 90vh;
-        width: 90vw;
+        height: 80%;
         margin: 0;
     }
 `;
 const SideBar = styled.div`
-    width: 250px;
+    max-width: 500px;
     padding: 1vh;
     margin: 5vh 10vw 5vh 1vw;
     overflow-y: scroll;
     ::-webkit-scrollbar {
     width: 0px;  /* Remove scrollbar space */
     background: transparent;  /* Optional: just make scrollbar invisible */
-    }
-    .user {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1vh;
-    }
-    .friends {
-        background-color: #fff;
-        height: 50vh;
-        display: flex;
-        justify-content: center;
-        padding-top: 5px;
     }
     @media(max-width: 900px) {
         padding: 0;
@@ -180,6 +167,7 @@ const NavItems = styled.ul`
 const Img = styled.img`
     max-width:100%;
     max-height:100%;
+    display: flex;
 `;
 
 const Video = styled.video`
@@ -224,9 +212,7 @@ const TripTitle = styled.div`
 `;
 const SmallImg =styled.div `
     min-height: 80px;
-    min-width: 80px;
-    height: 150px;
-    margin-bottom: 1rem;
+    width: 100%;
     object-fit: cover; 
 `; 
 

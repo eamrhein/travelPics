@@ -1,50 +1,90 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom';
-import {  } from '../../../../styles/theme'
+import React, {useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useRouteMatch, Link } from 'react-router-dom';
 import { fetchPanels }  from '../../../../actions/panel_actions'
-
+import { AiFillPlusSquare } from 'react-icons/ai'
 import BranchIndexItem from './branch_index_item';
-
-export class BranchIndex extends Component {
-
-    componentDidMount() {
-        this.props.fetchPanels(this.props.panel.childIds)
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.panelId !== prevProps.panelId) {
-            this.props.fetchPanels(this.props.panel.childIds)
+import styled from 'styled-components';
+let AddPhoto = styled.p`
+    display: flex;
+    align-items: center;
+    margin: 2px 3px 30px 0px;
+    font-weight: bolder;
+    transition: all 0.2s ease;
+`;
+const BranchIndex = (props) => {
+    let panel = useSelector(state => state.entities.panels[props.panelId]);
+    let dispatch = useDispatch()
+    let {url} = useRouteMatch()
+    useEffect(() => {
+        dispatch(fetchPanels(panel.childIds))
+    }, [dispatch, panel.childIds] )
+    let [iconColor, setIconColor] = useState('#545454')
+    let [opacity, setOpacity] = useState('0.5')
+    const hoverEffect = (text) => {
+        if(text === 'hover') {
+            setOpacity('1')
+            setIconColor('#FF3B3F')
+        } else {
+            setOpacity('0.5')
+            setIconColor('#545454')
         }
     }
-
-    render() {
-
-        return (
-           
-            <>
-                { this.props.panel ?
-                    this.props.panel.childIds.map((childId) => {
-                    return <BranchIndexItem panelId={childId} key={childId}/>
-                }) :
-                    null
-                }
-                <div className="new-branch-item">
-                    <Link to={`${this.props.match.url}/branch`}>
-                        <i className="material-icons">playlist_add</i>
-                        <span>Add Event</span>
-                    </Link>
-                </div>
-            </>
-        )
-    }
+    return (
+        <>
+            {
+                panel ?
+                panel.childIds.map(childId => <BranchIndexItem panelId={childId} key={childId} />)
+                : null
+            }
+            <Link to={url + `/branch`}>
+                <AddPhoto 
+                    style={{opacity: opacity}} 
+                    onMouseEnter={() => hoverEffect('hover')} 
+                    onMouseLeave={() => hoverEffect()}>
+                    <AiFillPlusSquare style={{color: iconColor, marginRight: '3px'}} /> Add Photo
+                </AddPhoto>
+            </Link>
+        </>
+    )
 }
+// export class BranchIndex extends Component {
 
-const mapStateToProps = (state, ownProps) => ({
-    panel: state.entities.panels[ownProps.panelId]
-})
+//     componentDidMount() {
+//         this.props.fetchPanels(this.props.panel.childIds)
+//     }
 
-const mapDispatchToProps = (dispatch) => ({
-    fetchPanels: (arr) => dispatch(fetchPanels(arr))
-})
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BranchIndex));
+//     componentDidUpdate(prevProps) {
+//         if (this.props.panelId !== prevProps.panelId) {
+//             this.props.fetchPanels(this.props.panel.childIds)
+//         }
+//     }
+
+//     render() {
+
+//         return (
+           
+//             <>
+//                 { this.props.panel ?
+//                     this.props.panel.childIds.map((childId) => {
+//                     return <BranchIndexItem panelId={childId} key={childId}/>
+//                 }) :
+//                     null
+//                 }
+//                     <Link to={`${this.props.match.url}/branch`}>
+//                         <Plus />
+//                         <span>Add Photo</span>
+//                     </Link>
+//             </>
+//         )
+//     }
+// }
+
+// const mapStateToProps = (state, ownProps) => ({
+//     panel: state.entities.panels[ownProps.panelId]
+// })
+
+// const mapDispatchToProps = (dispatch) => ({
+//     fetchPanels: (arr) => dispatch(fetchPanels(arr))
+// })
+export default BranchIndex;
