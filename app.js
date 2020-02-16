@@ -10,6 +10,7 @@ const images = require('./routes/api/images');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
+app.use(compression());
 mongoose
   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
@@ -21,7 +22,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   });
 }
-app.use(compression());
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
