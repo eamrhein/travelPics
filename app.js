@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const app = express();
 const mongoose = require('mongoose');
 const db = require('./config/keys').mongoURI;
@@ -20,7 +21,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   });
 }
-
+app.use(compression());
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
