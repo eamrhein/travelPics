@@ -2,8 +2,8 @@
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PanelForm from './panelForm';
-import {fetchPanel, updatePanel } from '../../../actions/panel_actions';
-import { authorRoot } from '../../../actions/user_actions';
+import {fetchPanel, updatePanel } from '../../actions/panel_actions';
+import { authorRoot } from '../../actions/user_actions';
 
 const mapStateToProps = state => ({
   formType: 'edit',

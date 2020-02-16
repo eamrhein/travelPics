@@ -16,7 +16,8 @@ const SignupForm = () => {
 		last: '',
 		username: '',
 		email: '',
-		password: ''
+    password: '',
+    password2: ''
   });
   const dispatch = useDispatch();
   useEffect(() => {
@@ -56,6 +57,7 @@ const SignupForm = () => {
 					<Input type="text" placeholder="Last" value={form.last} onChange={(e) => handleChange(e, 'last')} />
 					<Input type="email" placeholder="Email" value={form.email}  onChange={(e) => handleChange(e, 'email') }/>
 					<Input type="password" placeholder="Password" value={form.password} onChange={(e) => handleChange(e, 'password') } />
+          <Input type="password" placeholder="Confirm Password" value={form.password2} onChange={(e) => handleChange(e, 'password2') } />
 					<Button type="submit">Signup</Button>
 				</FormWrapper>
         {renderErrors()}

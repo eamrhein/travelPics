@@ -27,7 +27,7 @@ const Main = styled.div`
     }
     @media(max-width: 900px) {
         max-height: 700px;
-        height: 70vh;
+        height: 90vh;
         width: 90vw;
         margin: 0;
     }

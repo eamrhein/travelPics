@@ -5,14 +5,13 @@ import { Route, Switch } from 'react-router-dom';
 import NavBarContainer from './nav/nav_bar_container';
 import Register from './session/signup_form';
 import Login from './session/login_form';
-import PanelShow from './panel/show/panel_show';
-import createPanelContainer from './main/panel/createPanelContainer';
-import branchPanelContainer from './main/panel/branchPanelContainer';
-import editPanelContainer from './main/panel/editPanelContainer';
-import LikedIndexContainer from './main/index/liked_index_container';
-import MainIndexContainer from './main/index/main_Index_container';
-import UserProfile from './main/profile/user_profile';
-import { theme } from '../styles/theme'
+import PanelShow from './panel_show/show/panel_show';
+import createPanelContainer from './panel_form/createPanelContainer';
+import branchPanelContainer from './panel_form/branchPanelContainer';
+import editPanelContainer from './panel_form/editPanelContainer';
+import IndexContainer from './panel_index/conditional_Index';
+import UserProfile from './panel_index/user_profile';
+import { theme, Main, Container } from '../styles/theme'
 
 const AppStyle = styled.div`
     a {
@@ -34,7 +33,6 @@ const AppStyle = styled.div`
     
 `;
 
-
 const App = () => (
   <ThemeProvider theme={theme}>
     <AppStyle>
@@ -42,9 +40,29 @@ const App = () => (
     <Switch>
       <AuthRoute exact path='/login' component={Login} />
       <AuthRoute exact path='/signup' component={Register} />
-      <Route exact path="/" component={MainIndexContainer} />
-      <ProtectedRoute exact path='/panels/liked' component={LikedIndexContainer} />
-      <ProtectedRoute exact path='/users/:userId' component={UserProfile} />
+      <Route exact path="/" component={(props) => (
+        <Container>
+          <Main>
+            <IndexContainer {...props} />
+          </Main>
+        </Container>
+      )}
+      />
+      <ProtectedRoute exact path='/panels/liked' component={(props) => (
+        <Container>
+          <Main>
+            <IndexContainer {...props} />
+          </Main>
+        </Container>
+      )} />
+       <ProtectedRoute exact path='/users/:userId' component={(props) => (
+        <Container>
+          <Main>
+            <UserProfile {...props} />
+          </Main>
+        </Container>
+        )
+      } />
       <ProtectedRoute exact path="/roots/new" component={createPanelContainer} />
       <ProtectedRoute path="/panels/:panelId/branch" component={branchPanelContainer} />
       <ProtectedRoute path="/panels/:panelId/edit" component={editPanelContainer} />
