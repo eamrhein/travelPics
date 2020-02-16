@@ -18,7 +18,7 @@ const BranchIndexItem = (props) => {
         <>
         {panel ?
         <BranchDiv>
-        <h3 style={{display: 'flex', justifyContent: 'center', marginTop: '3px', marginBottom: '3px'}}>
+        <h3 style={{display: 'flex', justifyContent: 'center', marginTop: '3px', marginBottom: '3px', marginRight: '0'}}>
             {panel.title}
         </h3>
         <Link to={`/panels/${props.panelId}`}>
