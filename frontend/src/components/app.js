@@ -1,7 +1,7 @@
 import React from 'react';
 import styled,{ ThemeProvider } from 'styled-components';
 import { AuthRoute, ProtectedRoute } from '../util/route_util';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import NavBarContainer from './nav/nav_bar_container';
 import Register from './session/signup_form';
 import Login from './session/login_form';
@@ -67,6 +67,7 @@ const App = () => (
       <ProtectedRoute path="/panels/:panelId/branch" component={branchPanelContainer} />
       <ProtectedRoute path="/panels/:panelId/edit" component={editPanelContainer} />
       <ProtectedRoute path="/panels/:panelId" component={PanelShow} />
+      <Redirect to="/" />
     </Switch>
     </AppStyle>
   </ThemeProvider>
