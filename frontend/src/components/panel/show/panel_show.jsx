@@ -1,94 +1,79 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import {useSelector, useDispatch } from 'react-redux'
 import CommentsIndex from '../comments/comments_index';
 import { fetchPanel, clearPanelState } from '../../../actions/panel_actions';
-import {Swipeable } from 'react-swipeable';
-
-import { Link } from 'react-router-dom';
-
-import Panel from '../panel';
+import { Container, Main, SideBar } from '../../../styles/theme';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import BranchIndex from './branches/branch_index';
+import styled from 'styled-components'
+import Panel from '../panel';
 import LikeButton from '../like_button';
-
-export class PanelShow extends Component {
-
-    constructor(props) {
-        super(props);
-        this.handleSwipe = this.handleSwipe.bind(this);
+const Segment = styled.div`
+    border: 1px solid lightgrey;
+    border-top: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: row;
+    background-color: #fff;
+    @media(max-width: 900px) {
+        margin-bottom: 5vh;
     }
-
-    componentDidMount() {
-        this.props.fetchPanel(this.props.match.params.panelId);
-    }
-    componentWillUnmount(){
-        this.props.clearPanelState();
-    }
-
-    handleSwipe() {
-        if (this.props.panel.parentId) {
-            this.props.fetchPanel(this.props.panel.parentId);
-            this.props.history.push(`/panels/${this.props.panel.parentId}`);
+`
+const PanelShow = (props) => {
+    let { panelId } = useParams();
+    let {pathname} = useLocation()
+    let dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(fetchPanel(panelId))
+        return function(){
+            dispatch(clearPanelState())
         }
-    }
-
-    render() {
-
-        if (this.props.panel) {
-            return (
-            <Swipeable onSwipedRight={this.handleSwipe} className="panel-show">
-                    <div className="story-area">
-                        <div className="panel-and-buttons">
-                        <Panel panelId={this.props.match.params.panelId} type="show"/>
-                            <div className="desktop-view-buttons">
-                                <div>
-                                {this.props.panel.rootId ?
-                                    <div className="root-button-container">
-                                    <i className="material-icons root-button"><Link to={`/panels/${this.props.panel.rootId}`}>fast_rewind</Link></i>
-                                    </div> : ""
-                                }
-                                {this.props.panel.parentId ?
-                                    <div className="back-button-container">
-                                        <i className="material-icons back-button">
-                                            <Link to={`/panels/${this.props.panel.parentId}`}>skip_previous</Link>
-                                        </i>
-                                    </div> :
-                                ""}
-                                </div>
-                                <div>
-
-                                <LikeButton panelId={this.props.panel.id} />
-                                {this.props.currentUser.id === this.props.panel.authorId ?
-                                <div className="edit-button-container">
-                                    <i className="material-icons edit-button"><Link to={`${this.props.location.pathname}/edit`}>edit</Link></i>
-                                </div>
-                                 : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <BranchIndex panelId={this.props.match.params.panelId}/>
-                    </div>
-                    <div>
-                        <CommentsIndex />
-                    </div>
-            </Swipeable>
-            )
-        } else {
-            return (
-                <div>Loading...</div>
-            )
-        }
-
-    }
+    },[dispatch, panelId])
+    let panel = useSelector(state => state.entities.panels[panelId]);
+    let user = useSelector(state => state.session.user)
+    return(
+        <Container>
+            {panel ?
+            <>
+             <Main>
+                <Panel panelId={panelId} type="show" />
+                <Segment style={{height: '50px', marginTop: '-5vh'}}>
+                    {
+                        panel.rootId ?
+                            <i className="material-icons root-button"><Link to={`/panels/${panel.rootId}`}>fast_rewind</Link></i> 
+                            : null}
+                    {
+                        panel.parentId ?
+                        <i className="material-icons back-button">
+                            <Link to={`/panels/${panel.parentId}`}>skip_previous</Link>
+                        </i>
+                        : null
+                    }
+                    <LikeButton panelId={panel.id} />
+                    {
+                        user.id === panel.authorId ?
+                        <i className="material-icons edit-button">
+                            <Link to={`${pathname}/edit`}>
+                                edit
+                            </Link>
+                        </i>
+                        : null
+                    }
+                </Segment>
+                <Segment>
+                    <CommentsIndex />
+                </Segment>
+                </Main>
+                <SideBar>
+                    <BranchIndex panelId={panelId} />
+                </SideBar>
+            </>
+                :
+                null
+            }
+        </Container>
+    )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    panel: state.entities.panels[ownProps.match.params.panelId],
-    currentUser: state.session.user
-})
-
-const mapDispatchToProps = (dispatch) => ({
-    fetchPanel: (panelId) => dispatch(fetchPanel(panelId)),
-    clearPanelState: () => dispatch(clearPanelState())
-  })
-
-export default connect(mapStateToProps, mapDispatchToProps)(PanelShow);
+export default PanelShow;

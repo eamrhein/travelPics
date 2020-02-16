@@ -10,7 +10,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  //NEED THE CREATE PANEL
   action: panel => dispatch(createPanel(panel)),
   authorRoot: (userAndpanelIds) => dispatch(authorRoot(userAndpanelIds))
 });

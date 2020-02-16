@@ -1,71 +1,82 @@
 import React, {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux'
+import styled from 'styled-components';
+import { Form, FormWrapper, Input, Button, Img } from './../../../styles/theme';
 import axios from 'axios';
+
+const AuthStyle = styled.div`
+  	display: flex;
+	flex-direction: column;  
+	justify-content: center;
+`;
+const Imgpreview = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: 400px;
+  max-height: 500px;
+  max-width: 500px;
+	cursor: pointer;
+	margin-bottom: 1rem;
+  background-color: white;
+  object-fit: cover;
+`;
+
 const PanelForm = (props) => {
+  const {fetchPanel, formType} = props;
+  const id = props.match.params.panelId
   let [panel, setPanel] = useState({
     authorId: '',
     title: '',
     panelText: '',
-    photoURL: '',
+    photoURL: null,
     childId: [],
-    parentId: null,
+    parentId: formType==="branch" ? id : null,
     likes: 0,
     rootId: null
   })
   let [photoFile, setPhotoFile] = useState(null)
-
+  console.log(panel)
+  let prevPanel = useSelector(state => state.entities.panels[id])
   useEffect(()=> {
-    switch (props.formType) {
-      case 'edit':
-        props.fetchPanel(props.match.params.panelId)
-          .then(() => setPanel(props.panels[props.match.params.panelId]))
-        break;
-      case 'branch':
-        props.fetchPanel(props.match.params.panelId)
-          .then((panel) => {
-            let panelToCheck = panel.panel.data
-            if(panelToCheck.rootId === null){
-              setPanel({
-                ...panel, 
-                parentId: props.match.params.panelId,
-                rootId: panelToCheck.id })
-            } else {
-              setPanel({ 
-                ...panel,
-                parentId: props.match.params.panelId, 
-                rootId: panelToCheck.rootId 
-              })
-            }
-          })
-        break
-      default:
-        break;
-    }
-  }, [props]);
+    if(fetchPanel) {
+      fetchPanel(id)
+    };
+  }, [fetchPanel, id]);
+  useEffect(() =>{
+      if(formType === 'edit'){
+        setPanel({...prevPanel});
+      }
+  }, [formType, prevPanel])
+
   function handleSubmit(e){
         e.preventDefault();
-        getSignedPhotoRequest(photoFile);
-      }
-  function handleChange(form){
-    return function(e) {
+        if(photoFile) {
+          getSignedPhotoRequest(photoFile);
+        } else {
+          sendPanel()
+        }
+  }
+  function handleChange(e, form){
       setPanel({
         ...panel,
         [form]: e.target.value
       })
-    }
   }
   function sendPanel(){
     panel.authorId = props.currentUser.id;
     props.action(panel)
       .then((childPanel) => {
-        if(childPanel.panel.data.parentId && props.formType === 'branch') {
-          props.fetchPanel(childPanel.panel.data.parentId)
+        if(props.formType === 'branch') {
+          props.fetchPanel(panel.parentId)
             .then(parentPanel =>{
               parentPanel.panel.data.childIds.push(childPanel.panel.data.id)
               props.updatePanel(parentPanel.panel.data)
                 .then(() => props.history.push(`/panels/${childPanel.panel.data.id}`))
             },
              (err) => console.log(err))
-        } else {
+        } else{
           props.authorRoot({ userId: props.currentUser.id, rootId: childPanel.panel.data.id})
             .then(() => {
               props.history.push(`/panels/${childPanel.panel.data.id}`)
@@ -96,7 +107,6 @@ const PanelForm = (props) => {
   function getSignedPhotoRequest(photo) {
     const res = axios.get(`/api/images?file-name=${photo.name}&file-type=${photo.type}`)
     .then( res => {
-        console.log(res);
         const { signedRequest, url } = res.data;
         uploadFile(photo, signedRequest, url)
       },
@@ -122,28 +132,54 @@ const PanelForm = (props) => {
     };
     xhr.send(file);
   }
+  let formTitle =  props.formType
+  .replace(/^\w/, chr => chr.toUpperCase())
   return(
-    <div>
-      <form className='create-panel-form' onSubmit={handleSubmit}>
-        <h1 className='panel-form-title'>{props.formType}</h1>
-        <label >
-          Title
-          <input type="text" onChange={handleChange('title')} />
-        </label>
-        <label className="image-input">
-          <input id="file-input" type="file" onChange={photoReader} />
-          <div className="image-input-label">
-            upload an image
-          </div>
-          {panel.photoURL ? (<img src={panel.photoURL} alt={panel.title} className="image-preview" />) : ""}
-        </label>
-        <label >
-          Caption
-          <textarea cols="30" rows="10" onChange={handleChange('panelText')} value={panel.panelText}></textarea>
-        </label>
-        <input type="submit" value={props.formType}/>
-    </form>
-    </div>
+    <AuthStyle>
+      <h1 style={{textAlign: "center"}}>
+        {
+         formTitle
+        } Trip
+        </h1>
+      <Form className='create-panel-form' onSubmit={handleSubmit}>
+        <FormWrapper>
+          <Input
+            style={{width: '100%'}}
+            type="text"
+            onChange={(e) => handleChange(e, 'title')}
+            value={panel.title}
+            placeholder="Location"
+          />
+          <div>
+						<Input
+							id="file"
+							style={{display: 'none'}} 
+							type="file"
+							accept="image/png, image/jpeg"
+							onChange={photoReader}/>
+						{panel.photoURL ? 
+							<label htmlFor="file">
+								<Imgpreview>
+									<Img alt={panel.title} src={panel.photoURL}  />
+								</Imgpreview> 
+							</label>:
+							<label htmlFor="file">
+								<Imgpreview>
+							    Pick a nice picture of the location you traveled to.
+								</Imgpreview>
+							</label> }
+              </div>
+              <textarea 
+                style={{marginBottom: '1rem', resize: 'none'}}
+                cols="30" rows="10" 
+                onChange={(e) => handleChange(e,'panelText')} 
+                value={panel.panelText}
+                placeholder="Describe What Happened"
+              />
+              <Button type="submit" value={props.formType}>Complete</Button>
+            </FormWrapper>
+    </Form>
+    </AuthStyle>
   )
 }
 // }

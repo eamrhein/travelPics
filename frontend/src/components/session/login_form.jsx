@@ -1,81 +1,59 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { login, clearErrors } from '../../actions/session_actions';
+import {useDispatch, useSelector} from 'react-redux';
+import styled from 'styled-components';
+import { Form, FormWrapper, Input, Button } from '../../styles/theme'
 
-class LoginForm extends React.Component {
-  constructor(props) {
-    super(props);
+const AuthStyle = styled.div`
+  display: flex;
+	flex-direction: column;  
+	justify-content: center;
+`;
 
-    this.state = {
-      email: '',
-      password: '',
-      errors: {}
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.renderErrors = this.renderErrors.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentUser === true) {
-      this.props.history.push('/');
+const LoginForm = () => {
+  let [form, setForm] = useState({
+		email: '',
+		password: ''
+	});
+  const errors = useSelector(state => state.errors.session);
+  const dispatch = useDispatch();
+  const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch(login(form));
+  };
+  const handleChange = (e, name) => {
+		setForm({...form, [name]: e.currentTarget.value});
+  };
+  const renderErrors = () => {
+        return (
+          <ul>
+            {Object.keys(errors).map((error, i) => (
+              <li style={{color: 'red'}} key={`error-${i}`}>
+                {errors[error]}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+  useEffect(() => {
+    dispatch(clearErrors())
+    return function() {
+      dispatch(clearErrors())
     }
     
-    this.setState({ errors: nextProps.errors })
-  }
-
-  update(field) {
-    return e => this.setState({
-      [field]: e.currentTarget.value
-    });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-
-    let user = {
-      email: this.state.email,
-      password: this.state.password
-    };
-    this.props.login(user)
-
-  }
-
-  renderErrors() {
-    return (
-      <ul className="register-errors">
-        {Object.keys(this.state.errors).map((error, i) => (
-          <li key={`error-${i}`}>
-            {this.state.errors[error]}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  render() {
-    return (
-      <div className="login-form-container">
-        <form onSubmit={this.handleSubmit}>
-          <h1>Log In</h1>
-          <div className="login-form">
-            <br />
-            <input type="text"
-              value={this.state.email}
-              onChange={this.update('email')}
-              placeholder="Email"
-            />
-            <input type="password"
-              value={this.state.password}
-              onChange={this.update('password')}
-              placeholder="Password"
-            />
-            <input type="submit" value="Submit" />
-            {this.renderErrors()}
-          </div>
-        </form>
-      </div>
-    );
-  }
+  }, [dispatch])
+  return (
+    <AuthStyle>
+			<h3 style={{textAlign: "center"}}>Login</h3>
+			<Form onSubmit={e => handleSubmit(e)}>
+				<FormWrapper>
+					<Input type="email" placeholder="Email" value={form.email} onChange={(e) => handleChange(e, 'email')} />
+					<Input type="password" placeholder="Password" value={form.password} onChange={(e) => handleChange(e, 'password')}  />
+					<Button type="submit">Login</Button>
+				</FormWrapper>
+			</Form>
+      {renderErrors()}
+    </AuthStyle>
+  );
 }
-
-export default withRouter(LoginForm);
+export default LoginForm;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-
+import {  } from '../../../../styles/theme'
 import { fetchPanels }  from '../../../../actions/panel_actions'
 
 import BranchIndexItem from './branch_index_item';
@@ -21,21 +21,21 @@ export class BranchIndex extends Component {
     render() {
 
         return (
-            <ul className="branch-index">
-                
+           
+            <>
                 { this.props.panel ?
                     this.props.panel.childIds.map((childId) => {
                     return <BranchIndexItem panelId={childId} key={childId}/>
                 }) :
-                    ""
+                    null
                 }
-                <li className="new-branch-item">
+                <div className="new-branch-item">
                     <Link to={`${this.props.match.url}/branch`}>
                         <i className="material-icons">playlist_add</i>
-                        <span>Add Branch</span>
+                        <span>Add Event</span>
                     </Link>
-                </li>
-            </ul>
+                </div>
+            </>
         )
     }
 }
