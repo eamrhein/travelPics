@@ -9,6 +9,7 @@ const images = require('./routes/api/images');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
+console.log(db);
 mongoose
   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
