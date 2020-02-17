@@ -37,7 +37,7 @@ const PanelForm = (props) => {
     rootId: null
   })
   let [photoFile, setPhotoFile] = useState(null)
-  console.log(panel)
+
   let prevPanel = useSelector(state => state.entities.panels[id])
   useEffect(()=> {
     if(fetchPanel) {
@@ -58,12 +58,14 @@ const PanelForm = (props) => {
           sendPanel()
         }
   }
+
   function handleChange(e, form){
       setPanel({
         ...panel,
         [form]: e.target.value
       })
   }
+
   function sendPanel(){
     panel.authorId = props.currentUser.id;
     props.action(panel)
@@ -84,6 +86,7 @@ const PanelForm = (props) => {
         }
       }, (err) => console.log(err))
   }
+
   function  photoReader(e) {
     const reader = new FileReader();
     const file = e.currentTarget.files[0];
@@ -104,6 +107,7 @@ const PanelForm = (props) => {
       setPhotoFile(file)
     }
   }
+
   function getSignedPhotoRequest(photo) {
     const res = axios.get(`/api/images?file-name=${photo.name}&file-type=${photo.type}`)
     .then( res => {
@@ -114,6 +118,7 @@ const PanelForm = (props) => {
     );
   console.log(res);
   }
+
   function uploadFile(file, signedRequest, url) {
     const xhr = new XMLHttpRequest();
     xhr.open('PUT', signedRequest);
@@ -132,6 +137,7 @@ const PanelForm = (props) => {
     };
     xhr.send(file);
   }
+  
   let formTitle =  props.formType
   .replace(/^\w/, chr => chr.toUpperCase())
   return(

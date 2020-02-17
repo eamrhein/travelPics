@@ -24,5 +24,5 @@ const Panel = (props) => {
             </Trip>
     )
 }
-
+Panel.whyDidYouRender = true
 export default Panel;
