@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {useSelector, useDispatch } from 'react-redux'
 import CommentsIndex from '../comments/comments_index';
 import { fetchPanel, clearPanelState } from '../../../actions/panel_actions';
@@ -22,16 +22,20 @@ const Segment = styled.div`
 `
 const PanelShow = (props) => {
     let { panelId } = useParams();
-    let {pathname} = useLocation()
-    let dispatch = useDispatch()
+    let {pathname} = useLocation();
+    let dispatch = useDispatch();
+    let [trip, setTrip] = useState(true);
     useEffect(() => {
-        dispatch(fetchPanel(panelId))
+        if(trip) {
+            dispatch(fetchPanel(panelId))
+            setTrip(false)
+        }
         return function(){
             dispatch(clearPanelState())
         }
-    },[dispatch, panelId])
-    let panel = useSelector(state => state.entities.panels[panelId]);
+    },[dispatch, panelId, trip]);
     let user = useSelector(state => state.session.user)
+    let panel = useSelector(state => state.entities.panels[panelId])
     return(
         <Container>
             {panel ?
@@ -66,7 +70,7 @@ const PanelShow = (props) => {
                 </Segment>
                 </Main>
                 <SideBar>
-                    <BranchIndex panelId={panelId} />
+                    <BranchIndex panel={panel}/>
                 </SideBar>
             </>
                 :
@@ -75,5 +79,5 @@ const PanelShow = (props) => {
         </Container>
     )
 }
-
+Panel.whyDidYouRender = true;
 export default PanelShow;

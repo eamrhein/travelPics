@@ -13,12 +13,16 @@ let AddPhoto = styled.p`
     transition: all 0.2s ease;
 `;
 const BranchIndex = (props) => {
-    let panel = useSelector(state => state.entities.panels[props.panelId]);
+    let {panel} = props
     let dispatch = useDispatch()
     let {url} = useRouteMatch()
+    let [trip, setTrip] = useState(true)
     useEffect(() => {
-        dispatch(fetchPanels(panel.childIds))
-    }, [dispatch, panel.childIds] )
+        if(trip) {
+            dispatch(fetchPanels(panel.childIds))
+            setTrip(false)
+        }
+    }, [dispatch, panel.childIds, trip] )
     let [iconColor, setIconColor] = useState('#545454')
     let [opacity, setOpacity] = useState('0.5')
     const hoverEffect = (text) => {
