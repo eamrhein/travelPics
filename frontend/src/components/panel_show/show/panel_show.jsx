@@ -30,9 +30,6 @@ const PanelShow = (props) => {
             dispatch(fetchPanel(panelId))
             setTrip(false)
         }
-        return function(){
-            dispatch(clearPanelState())
-        }
     },[dispatch, panelId, trip]);
     let user = useSelector(state => state.session.user)
     let panel = useSelector(state => state.entities.panels[panelId])
