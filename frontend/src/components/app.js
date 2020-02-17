@@ -3,8 +3,8 @@ import styled,{ ThemeProvider } from 'styled-components';
 import { AuthRoute, ProtectedRoute } from '../util/route_util';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { theme, Main, Container } from '../styles/theme'
+import IndexContainer from './panel_index/conditional_Index';
 const UserProfile = lazy(() => import('./panel_index/user_profile'));
-const IndexContainer = lazy(() => import('./panel_index/conditional_Index'));
 const editPanelContainer = lazy(() => import('./panel_form/editPanelContainer'));
 const branchPanelContainer = lazy(() => import('./panel_form/branchPanelContainer')); 
 const createPanelContainer = lazy(() => import('./panel_form/createPanelContainer'));
