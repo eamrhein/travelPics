@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Trip, TripTitle, TripImg, TripComments, Img } from '../../styles/theme';
+import {TripTitle, TripImg, TripComments, Img } from '../../styles/theme';
 
 const Panel = ({ panel }) => {
   return (
-    <Trip id={panel.id}>
+    <>
       <TripTitle>
         <div className="handle">
           <Link to={`/users/${panel.authorId}`} className="name">{`${panel.authorUsername}`}</Link>
@@ -19,7 +19,7 @@ const Panel = ({ panel }) => {
       <TripComments>
         <p>{panel.panelText}</p>
       </TripComments>
-    </Trip>
+    </>
   );
 };
 export default Panel;

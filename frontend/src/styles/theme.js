@@ -11,7 +11,7 @@ const theme = {
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  height: 100%;
+  height: 94%;
   @media (max-width: 900px) {
     flex-direction: column;
   }
@@ -19,7 +19,6 @@ const Container = styled.div`
 const Main = styled.div`
   width: 700px;
   padding: 1vh;
-  margin: 5vh 0vw 5vh 10vw;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */
@@ -34,7 +33,6 @@ const Main = styled.div`
 const SideBar = styled.div`
   max-width: 500px;
   padding: 1vh;
-  margin: 5vh 10vw 5vh 1vw;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */

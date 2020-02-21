@@ -1,33 +1,70 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { timeSince } from './timeSince';
+import { useSelector, useDispatch } from 'react-redux';
 import CreateComment from './create_comment';
 import { deleteComment } from '../../../actions/comment_actions';
-
-export default function CommentsIndex() {
-  let panel = useSelector(state => state.entities.panels[0]);
-  let currentUser = useSelector(state => state.session.user);
-  let comments = panel.comments;
-  function createDelete(currentUserId, authorId, commentId) {
-    if (currentUserId === authorId) {
-      return <button onClick={() => deleteComment(panel.id, commentId)}>Delete</button>;
+import { AiFillDelete, AiOutlineDelete } from 'react-icons/ai';
+import styled from 'styled-components';
+let Comment = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-left: 5px;
+  div {
+    p {
+      text-indent: 10px;
+      margin: 0;
     }
   }
-
+  button {
+    color: red;
+    cursor: pointer;
+    transition: all 0.4s ease-out;
+    position: relative;
+    .hover-show {
+      opacity: 0;
+    }
+    .hover-hidden {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+    }
+    :hover {
+      .hover-hidden {
+        opacity: 0;
+        transition: 0.4s ease-in;
+      }
+      .hover-show {
+        position: relative;
+        opacity: 1;
+        transition: 0.4s ease-in;
+        top: 3px;
+        left: 3px;
+      }
+    }
+  }
+`;
+export default function CommentsIndex() {
+  let dispatch = useDispatch();
+  let panel = useSelector(state => state.entities.panels[0]);
+  let user = useSelector(state => state.session.user);
+  let comments = panel.comments;
   comments = comments.map(comment => (
-    <div className="comment" key={comment._id}>
-      {createDelete(currentUser.id, comment.authorId, comment._id)}
-      <div>
-        <span className="username">{comment.username}</span>{' '}
-        <span className="comment-body">{comment.content}</span>
+    <Comment key={comment._id}>
+      <div style={{ fontWeight: 'bolder', marginRight: '5px' }}>{comment.username}</div>
+      <div className="comment-body">
+        <p>
+          {comment.content}
+          <button onClick={() => dispatch(deleteComment(panel.id, comment._id))}>
+            <AiOutlineDelete className="hover-hidden" />
+            <AiFillDelete className="hover-show" />
+          </button>
+        </p>
       </div>
-      <span className="timestamp">{timeSince(comment.timestamp)} ago</span>
-    </div>
+    </Comment>
   ));
   return (
-    <div className="comment-area">
-      {comments}
-      {!!currentUser.loggedIn ? <CreateComment authorId={currentUser.id} /> : ''}
+    <div style={{ minWidth: '100%' }}>
+      <div>{comments}</div>
+      <div>{user && user.id ? <CreateComment authorId={user.id} /> : null}</div>
     </div>
   );
 }

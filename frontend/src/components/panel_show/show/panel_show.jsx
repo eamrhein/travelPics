@@ -4,16 +4,17 @@ import CommentsIndex from '../comments/comments_index';
 import { fetchPanel, clearPanelState } from '../../../actions/panel_actions';
 import { fetchChildren, clearChildState } from '../../../actions/children_actions';
 import { like, unlike } from '../../../actions/user_actions';
-import { Container, Main, SideBar } from '../../../styles/theme';
+import { Container, Main, SideBar, Trip } from '../../../styles/theme';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import BranchIndex from './branches/branch_index';
 import styled from 'styled-components';
 import Panel from '../panel';
-import { IoIosHeartEmpty, IoIosHeart, IoMdArrowRoundBack } from 'react-icons/io';
+import { IoIosHeartEmpty, IoIosHeart } from 'react-icons/io';
 import { FiEdit } from 'react-icons/fi';
 const Segment = styled.div`
   border: 1px solid lightgrey;
   border-top: none;
+  border-bottom: none;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -61,7 +62,9 @@ const PanelShow = () => {
   return panel ? (
     <Container>
       <Main>
-        <Panel panel={panel} type="show" />
+        <Trip style={{ borderBottom: 'none' }}>
+          <Panel panel={panel} type="show" />
+        </Trip>
         <Segment style={{ height: '50px', marginTop: '-5vh' }}>
           {session.isAuthenticated ? (
             <>
@@ -74,11 +77,6 @@ const PanelShow = () => {
                 <FiEdit />
               </Link>
             </>
-          ) : null}
-          {panel.parentId ? (
-            <Link to={`/panels/${panel.parentId}`}>
-              <IoMdArrowRoundBack />
-            </Link>
           ) : null}
         </Segment>
         <Segment>

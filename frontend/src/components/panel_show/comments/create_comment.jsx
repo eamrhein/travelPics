@@ -2,11 +2,45 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createComment } from '../../../actions/comment_actions';
+import styled from 'styled-components';
 
+const Comment = styled.div`
+  min-width: 100%;
+  min-height: 100%;
+  background-color: red;
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    textarea {
+      width: 100%;
+      resize: none;
+      border: none;
+    }
+  }
+  button {
+    border: 0;
+    height: 35px;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: ${props => props.theme.colors.font};
+    color: #fff;
+    border-radius: 3px;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+    &:hover {
+      background-color: ${props => props.theme.colors.primary};
+    }
+  }
+`;
 const mSTP = (state, ownProps) => ({
   username: state.session.user.username,
   panelId: ownProps.match.params.panelId,
-  panel: state.entities.panels[ownProps.match.params.panelId]
+  panel: state.entities.panels[0]
 });
 const mDTP = dispatch => ({
   createComment: (id, comment) => dispatch(createComment(id, comment))
@@ -49,13 +83,18 @@ class CreateComment extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
-      <div className="comment-form-container">
+      <Comment>
         <form onSubmit={e => this.handleSubmit(e)}>
-          <textarea value={this.state.comment.content} onChange={this.handleChange} />
+          <textarea
+            placeholder="add a comment"
+            value={this.state.comment.content}
+            onChange={this.handleChange}
+          />
           <button type="submit">Comment</button>
         </form>
-      </div>
+      </Comment>
     );
   }
 }
