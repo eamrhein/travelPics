@@ -8,17 +8,16 @@ export const fetchPanel = id => {
   return axios.get(`/api/panels/${id}`);
 };
 
-export const updatePanel = (panel) => {
+export const updatePanel = panel => {
   return axios.patch(`/api/panels/${panel.id}`, panel);
 };
 
-export const fetchPanels = (optionalArg) => {
-  return axios.get(`/api/panels/`, {params: {panelsArray: optionalArg}});
+export const fetchPanels = optionalArg => {
+  return axios.get(`/api/panels/`, { params: { panelsArray: optionalArg } });
+};
 
-}
-
-export const fetchChildren = (optionalArg) => {
-  return axios.get(`/api/panels/`, { params: { panelsArray: ['CHILDREN'].concat(optionalArg) } });
-}
-
-
+export const fetchChildren = optionalArg => {
+  return axios.get(`/api/panels/`, {
+    params: { panelsArray: ['CHILDREN'].concat(optionalArg) }
+  });
+};

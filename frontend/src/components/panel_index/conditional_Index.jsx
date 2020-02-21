@@ -1,39 +1,21 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import {useRouteMatch} from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchPanels, clearPanelState } from '../../actions/panel_actions';
-import Panel from '../panel_show/panel'
+import Panel from '../panel_show/panel';
 
-const ConditionalIndex = (props) => {
-  let {path} = useRouteMatch();
-  let dispatch = useDispatch()
-  const panels = useSelector(state => state.entities.panels)
-  const userIds = useSelector(state => state.session.user.followedRoots);
-  const { ProfilePanels } = props
-  const renderPanels = () => (
-    Object.keys(panels).reverse()
-      .map((id) => <Panel panel={panels[id]} key={id} />)
-      .slice(0, 7)
-  )
+const ConditionalIndex = props => {
+  let dispatch = useDispatch();
+  const panels = useSelector(state => state.entities.panels);
+  const { incomingPanels } = props;
   useEffect(() => {
-    if(ProfilePanels){
-      dispatch(fetchPanels(ProfilePanels))
-    }else if(path.includes('users') || path.includes('liked')){
-      dispatch(fetchPanels(userIds))
+    dispatch(clearPanelState());
+    if (incomingPanels) {
+      dispatch(fetchPanels(incomingPanels));
     } else {
-      dispatch(fetchPanels())
+      dispatch(fetchPanels());
     }
-    return function(){
-      dispatch(clearPanelState())
-    }
-  },[ProfilePanels, dispatch, path, userIds])
-  return(
-    <>
-      {renderPanels()}
-    </>  
- 
-  );
-}
+  }, [dispatch, incomingPanels]);
+  return panels.map(panel => <Panel panel={panel} key={panel.id} />);
+};
 
 export default ConditionalIndex;
-

@@ -1,4 +1,4 @@
-export const timeSince = (date) => {
+export const timeSince = date => {
   const seconds = Math.floor((Date.now() - Date.parse(date)) / 1000);
 
   let interval = Math.floor(seconds / 31536000);

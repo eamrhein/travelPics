@@ -15,18 +15,16 @@ if (process.env.NODE_ENV === 'development') {
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
-  const devState = {
-  }
+  const devState = {};
   // If a returning user has a session token stored in localStorage
   if (localStorage.jwtToken) {
     setAuthToken(localStorage.jwtToken);
     const decodedUser = jwt_decode(localStorage.jwtToken);
-    devState.session = { isAuthenticated: true, user: decodedUser }
+    devState.session = { isAuthenticated: true, user: decodedUser };
     const preloadedState = devState;
 
     store = configureStore(preloadedState);
     const currentTime = Date.now() / 1000;
-    console.log(currentTime)
     if (decodedUser.exp < currentTime) {
       store.dispatch(logout());
       window.location.href = '/#/';
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     store = configureStore(devState);
   }
-
 
   const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} />, root);

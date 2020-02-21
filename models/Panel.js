@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 const CommentSchema = require('./Comment');
 
 const PanelSchema = new Schema({
-
   authorId: {
     type: Schema.Types.ObjectId,
     ref: 'users',
@@ -42,9 +42,8 @@ const PanelSchema = new Schema({
   likes: {
     type: Number
   },
-  
-  comments: [CommentSchema]
 
+  comments: [CommentSchema]
 });
 
 const Panel = mongoose.model('panels', PanelSchema);

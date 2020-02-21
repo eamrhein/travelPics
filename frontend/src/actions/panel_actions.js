@@ -15,28 +15,20 @@ const receivePanels = panels => ({
 
 const removePanels = () => ({
   type: REMOVE_PANELS
-})
+});
 
-export const clearPanelState = () => dispatch => (
-  dispatch(removePanels())
-);
+export const clearPanelState = () => dispatch => dispatch(removePanels());
 
-export const createPanel = panel => dispatch => (
-  PanelAPIutil.createPanel(panel)
-    .then(panel => dispatch(receivePanel(panel),(err) => console.log('hey here are errors', err)))
-);
+export const createPanel = panel => dispatch =>
+  PanelAPIutil.createPanel(panel).then(panel =>
+    dispatch(receivePanel(panel), err => console.log('hey here are errors', err))
+  );
 
-export const fetchPanel = id => dispatch => (
-  PanelAPIutil.fetchPanel(id)
-    .then(panel => dispatch(receivePanel(panel)))
-);
+export const fetchPanel = id => dispatch =>
+  PanelAPIutil.fetchPanel(id).then(panel => dispatch(receivePanel(panel)));
 
-export const fetchPanels = (optionalArg) => dispatch => (
-  PanelAPIutil.fetchPanels(optionalArg)
-    .then(panels => dispatch(receivePanels(panels)))
-);
+export const fetchPanels = optionalArg => dispatch =>
+  PanelAPIutil.fetchPanels(optionalArg).then(panels => dispatch(receivePanels(panels)));
 
-export const updatePanel = (panel) => dispatch => (
-  PanelAPIutil.updatePanel(panel)
-    .then(panel => dispatch(receivePanel(panel)))
-);
+export const updatePanel = panel => dispatch =>
+  PanelAPIutil.updatePanel(panel).then(panel => dispatch(receivePanel(panel)));

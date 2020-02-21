@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const validText = require('./valid-text');
 
-module.exports = function ValidateComment (data) {
+module.exports = function ValidateComment(data) {
   const errors = {};
 
   data.content = validText(data.content) ? data.content : '';
