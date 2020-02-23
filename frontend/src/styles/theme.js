@@ -14,10 +14,11 @@ const Container = styled.div`
   height: 94%;
   @media (max-width: 900px) {
     flex-direction: column;
+    justify-content: flex-start;
   }
 `;
 const Main = styled.div`
-  width: 700px;
+  width: 800px;
   padding: 1vh;
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -25,13 +26,15 @@ const Main = styled.div`
     background: transparent; /* Optional: just make scrollbar invisible */
   }
   @media (max-width: 900px) {
-    max-height: 700px;
-    height: 80%;
-    margin: 0;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    width: 95vw;
   }
 `;
 const SideBar = styled.div`
-  max-width: 500px;
+  width: 30%;
   padding: 1vh;
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -39,23 +42,12 @@ const SideBar = styled.div`
     background: transparent; /* Optional: just make scrollbar invisible */
   }
   @media (max-width: 900px) {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 20vh;
-    .user,
-    .user > div,
-    .user > div > * {
-      display: none;
-    }
-    .friends {
-      height: 15vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: ${props => props.theme.colors.background};
-    }
+    width: 90%;
+    min-height: 40vh;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: none;
+    overflow-x: scroll;
   }
 `;
 const Form = styled.form`
@@ -177,6 +169,8 @@ const Avatar = styled.div`
 `;
 const Trip = styled.div`
   border: 1px solid lightgrey;
+  text-indent: 10px;
+  max-width: 800px;
   display: flex;
   flex-flow: column;
   background-color: #fff;
@@ -192,12 +186,12 @@ const TripTitle = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  div {
-    margin-left: 10px;
+  .handle {
+    font-weight: bolder;
   }
   .title {
     font-family: 'Roboto';
-    font-weight: bolder;
+    font-weight: normal;
     font-size: 20pt;
     margin-left: auto;
     margin-right: auto;
@@ -215,9 +209,11 @@ const TripImg = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 1000px;
   margin-bottom: 30px;
   object-fit: cover;
+  img {
+    max-height: 500px;
+  }
 `;
 
 const TripComments = styled.div`

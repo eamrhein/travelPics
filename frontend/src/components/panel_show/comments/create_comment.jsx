@@ -1,8 +1,8 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { createComment } from '../../../actions/comment_actions';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 
 const Comment = styled.div`
   min-width: 100%;
@@ -37,66 +37,35 @@ const Comment = styled.div`
     }
   }
 `;
-const mSTP = (state, ownProps) => ({
-  username: state.session.user.username,
-  panelId: ownProps.match.params.panelId,
-  panel: state.entities.panels[0]
-});
-const mDTP = dispatch => ({
-  createComment: (id, comment) => dispatch(createComment(id, comment))
-});
 
-class CreateComment extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comment: {
-        content: '',
-        authorId: this.props.authorId,
-        username: this.props.username
-      }
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(e) {
-    this.setState({
-      comment: {
-        authorId: this.props.authorId,
-        username: this.props.username,
-        content: e.target.value
-      }
+export default function CreateComment({ user }) {
+  let { panelId } = useParams();
+  let dispatch = useDispatch();
+  let [panel, setPanel] = useState({
+    content: '',
+    authorId: user.id,
+    username: user.username
+  });
+  function handleChange(e) {
+    setPanel({
+      ...panel,
+      content: e.target.value
     });
   }
-
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const { createComment, panelId } = this.props;
-    createComment(panelId, this.state.comment);
-    this.setState({
-      comment: {
-        content: '',
-        authorId: this.props.authorId,
-        username: this.props.username
-      }
+    dispatch(createComment(panelId, panel));
+    setPanel({
+      ...panel,
+      content: ''
     });
   }
-
-  render() {
-    console.log(this.state);
-    return (
-      <Comment>
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <textarea
-            placeholder="add a comment"
-            value={this.state.comment.content}
-            onChange={this.handleChange}
-          />
-          <button type="submit">Comment</button>
-        </form>
-      </Comment>
-    );
-  }
+  return (
+    <Comment>
+      <form onSubmit={handleSubmit}>
+        <textarea placeholder="add a comment" value={panel.content} onChange={handleChange} />
+        <button type="submit">Comment</button>
+      </form>
+    </Comment>
+  );
 }
-
-export default withRouter(connect(mSTP, mDTP)(CreateComment));

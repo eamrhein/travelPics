@@ -46,7 +46,7 @@ export default function CommentsIndex() {
   let dispatch = useDispatch();
   let panel = useSelector(state => state.entities.panels[0]);
   let user = useSelector(state => state.session.user);
-  let comments = panel.comments;
+  let comments = panel.comments || [];
   comments = comments.map(comment => (
     <Comment key={comment._id}>
       <div style={{ fontWeight: 'bolder', marginRight: '5px' }}>{comment.username}</div>
@@ -64,7 +64,7 @@ export default function CommentsIndex() {
   return (
     <div style={{ minWidth: '100%' }}>
       <div>{comments}</div>
-      <div>{user && user.id ? <CreateComment authorId={user.id} /> : null}</div>
+      <div>{user && user.id ? <CreateComment user={user} /> : null}</div>
     </div>
   );
 }

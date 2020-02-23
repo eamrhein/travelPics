@@ -1,9 +1,11 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import {TripTitle, TripImg, TripComments, Img } from '../../styles/theme';
+import { TripTitle, TripImg, TripComments, Img } from '../../styles/theme';
 
 const Panel = ({ panel }) => {
-  return (
+  let { panelId } = useParams();
+  return panel ? (
     <>
       <TripTitle>
         <div className="handle">
@@ -12,7 +14,7 @@ const Panel = ({ panel }) => {
         <div className="title">{panel.title}</div>
       </TripTitle>
       <TripImg>
-        <Link to={`/panels/${panel.id}`}>
+        <Link to={panelId ? `/panels/${panelId}` : `/panels/${panel.id}`}>
           <Img src={panel.photoURL} className="panel-image" alt={panel.panelText} />
         </Link>
       </TripImg>
@@ -20,6 +22,6 @@ const Panel = ({ panel }) => {
         <p>{panel.panelText}</p>
       </TripComments>
     </>
-  );
+  ) : null;
 };
 export default Panel;

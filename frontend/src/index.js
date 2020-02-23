@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const preloadedState = devState;
 
     store = configureStore(preloadedState);
-    const currentTime = Date.now() / 1000;
+    const currentTime = Date.now() / 6000;
     if (decodedUser.exp < currentTime) {
       store.dispatch(logout());
       window.location.href = '/#/';

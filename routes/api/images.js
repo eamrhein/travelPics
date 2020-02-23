@@ -26,31 +26,21 @@ const upload = multer({
   })
 });
 
-router.post('/', upload.array('', 1), (req, res) => {
-  const fileName = req.query['file-name'] + uuid3.URL;
-  const fileType = req.query['file-type'];
-
-  const s3Params = {
-    Bucket: S3_BUCKET,
-    Key: fileName,
-    Expires: 60,
-    ContentType: fileType,
-    ACL: 'public-read'
-  };
-
-  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+router.post('/', upload.single('photo'), (req, res) => {
+  let key = req.file.key;
+  res.send(`/api/images/${key}`);
+});
+router.get('/:id', (req, res) => {
+  console.log(req.params.id);
+  s3.getObject({ Bucket: S3_BUCKET, Key: req.params.id }, function(err, data) {
     if (err) {
-      console.log(err);
-      return res.end();
-    } else {
-      const uniqueURL = `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`;
-      const returnData = {
-        signedRequest: data,
-        url: uniqueURL
-      };
-      res.write(JSON.stringify(returnData));
-      res.end();
+      return res.status(500).send(err);
     }
+
+    // Headers
+    res.set('Content-Length', data.ContentLength).set('Content-Type', data.ContentType);
+
+    res.send(data.Body);
   });
 });
 

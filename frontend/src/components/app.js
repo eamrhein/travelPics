@@ -62,7 +62,7 @@ const App = () => (
               </Container>
             )}
           />
-          <ProtectedRoute
+          <Route
             exact
             path="/users/:userId"
             component={props => (

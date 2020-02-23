@@ -10,7 +10,7 @@ let AddPhoto = styled.p`
   font-weight: bolder;
   transition: all 0.2s ease;
 `;
-const BranchIndex = ({ children, auth }) => {
+const BranchIndex = ({ panels, auth, index, setIndex }) => {
   let { url } = useRouteMatch();
   let [iconColor, setIconColor] = useState('#545454');
   let [opacity, setOpacity] = useState('0.5');
@@ -25,7 +25,11 @@ const BranchIndex = ({ children, auth }) => {
   };
   return (
     <>
-      {children ? children.map(child => <BranchIndexItem child={child} key={child.id} />) : null}
+      {panels
+        ? panels.map((child, i) => (
+            <BranchIndexItem i={i} index={index} setIndex={setIndex} child={child} key={child.id} />
+          ))
+        : null}
       {auth ? (
         <Link to={url + `/branch`}>
           <AddPhoto

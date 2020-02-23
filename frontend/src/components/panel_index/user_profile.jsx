@@ -13,7 +13,7 @@ const ProfileShow = ({ type }) => {
     if (type === 'user') {
       dispatch(fetchUserProfile(userId)).then(user => {
         setAuth(user.userProfile.data.authoredRoots);
-        setFollow(user.userProfile.data.authoredRoots);
+        setFollow(user.userProfile.data.followedRoots);
         setName(user.userProfile.data.username);
       });
     }

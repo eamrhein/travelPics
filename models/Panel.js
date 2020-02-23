@@ -45,6 +45,5 @@ const PanelSchema = new Schema({
 
   comments: [CommentSchema]
 });
-
 const Panel = mongoose.model('panels', PanelSchema);
 module.exports = Panel;

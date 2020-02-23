@@ -1,4 +1,5 @@
 import { RECEIVE_PANEL, RECEIVE_PANELS, REMOVE_PANELS } from '../actions/panel_actions';
+import { RECEIVE_CHILDREN, CLEAR_CHILDREN } from '../actions/children_actions';
 import { LIKE_POST, UNLIKE_POST } from '../actions/user_actions';
 
 const PanelsReducer = (state = [], action) => {
@@ -10,6 +11,11 @@ const PanelsReducer = (state = [], action) => {
       return [...newData];
     case REMOVE_PANELS:
       return [];
+    case RECEIVE_CHILDREN:
+      let n = [...state];
+      return n.concat(Object.values(action.panels.data.children));
+    case CLEAR_CHILDREN:
+      return [state[0]];
     case LIKE_POST:
     case UNLIKE_POST:
       let newState = [...state];

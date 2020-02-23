@@ -13,9 +13,9 @@ const NavBar = props => {
       <NavItems>
         <li className="logo">
           <Link to="/">
-            <h1 style={{ margin: '0', display: 'flex', alignItems: 'center' }}>
+            <h1 style={{ display: 'flex', alignItems: 'center' }}>
               <Logo>
-                <GiCampfire />
+                <GiCampfire style={{ marginTop: '4px' }} />
               </Logo>
               Travel<Logo>Story</Logo>
             </h1>

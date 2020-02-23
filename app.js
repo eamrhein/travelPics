@@ -14,7 +14,7 @@ app.use(compression());
 mongoose
   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('frontend/build'));
@@ -24,10 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 app.use(passport.initialize());
 require('./config/passport')(passport);
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
+app.use(bodyParser.json({ limit: '500mb' }));
 app.use('/api/users', users);
 app.use('/api/panels', panels);
 app.use('/api/images', images);

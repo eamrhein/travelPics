@@ -9,24 +9,43 @@ let BranchDiv = styled.div`
   background-color: white;
   border: 1px solid lightgray;
   margin-bottom: 1rem;
+  .active {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+  }
+  .thumb-holder {
+    cursor: pointer;
+  }
+  h3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-right: 0;
+  }
+  @media (max-width: 900px) {
+    display: inline-block;
+    border: none;
+    background-color: transparent;
+    .thumb-holder {
+      margin: 5px;
+      max-width: 100px;
+      height: 100px;
+    }
+    h3 {
+      display: none;
+    }
+  }
 `;
-const BranchIndexItem = ({ child }) => {
+const BranchIndexItem = ({ child, i, index, setIndex }) => {
   return (
     <>
       {child ? (
         <BranchDiv>
-          <h3
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '3px',
-              marginBottom: '3px',
-              marginRight: '0'
-            }}
+          <SmallImg
+            onClick={() => setIndex(i)}
+            className={i === index ? 'active  thumb-holder' : 'thumb-holder'}
           >
-            {child.title}
-          </h3>
-          <SmallImg className="thumb-holder">
             <Img className="panel-thumb" src={child.photoURL} alt={child.title} />
           </SmallImg>
         </BranchDiv>
