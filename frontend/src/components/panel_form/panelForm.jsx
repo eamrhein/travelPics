@@ -28,13 +28,13 @@ const PanelForm = props => {
   const id = props.match.params.panelId;
   let [panel, setPanel] = useState({
     authorId: currentUser.id,
-    title: undefined,
-    panelText: undefined,
-    photoURL: undefined,
+    title: null,
+    panelText: null,
+    photoURL: null,
     childId: [],
-    parentId: formType === 'branch' ? id : undefined,
+    parentId: formType === 'branch' ? id : null,
     likes: 0,
-    rootId: undefined
+    rootId: null
   });
   let [photoFile, setPhotoFile] = useState(null);
   let prevPanel = useSelector(state => state.entities.panels[0]);
@@ -80,7 +80,7 @@ const PanelForm = props => {
               parentPanel.panel.data.childIds.push(childPanel.panel.data.id);
               props
                 .updatePanel(parentPanel.panel.data)
-                .then(() => props.history.push(`/panels/${childPanel.panel.data.id}`));
+                .then(() => props.history.push(`/panels/${id}`));
             },
             err => console.log(err)
           );
@@ -91,7 +91,7 @@ const PanelForm = props => {
               rootId: childPanel.panel.data.id
             })
             .then(() => {
-              props.history.push(`/panels/${childPanel.panel.data.id}`);
+              props.history.push(`/panels/`);
             });
         }
       },

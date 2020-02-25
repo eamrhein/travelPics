@@ -1,29 +1,28 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPanels, clearPanelState } from '../../actions/panel_actions';
 import Panel from '../panel_show/panel';
 import { Trip } from '../../styles/theme';
-
-function arraysEqual(a1, a2) {
-  /* WARNING: arrays must not contain {objects} or behavior may be undefined */
-  // eslint-disable-next-line eqeqeq
-  return JSON.stringify(a1) == JSON.stringify(a2);
-}
+import { useLocation } from 'react-router-dom';
 
 const ConditionalIndex = props => {
+  let { pathname } = useLocation();
   let dispatch = useDispatch();
   const panels = useSelector(state => state.entities.panels);
   let { incomingPanels } = props;
-  let initPanels = useRef(incomingPanels);
   useEffect(() => {
-    if (!initPanels.current) {
+    if (incomingPanels === null) {
       dispatch(clearPanelState());
-      dispatch(fetchPanels());
-    } else if (!arraysEqual(initPanels.current, incomingPanels)) {
-      dispatch(fetchPanels(incomingPanels));
+    } else if (incomingPanels) {
+      if (incomingPanels.length >= 1) {
+        dispatch(clearPanelState());
+        dispatch(fetchPanels(incomingPanels));
+      }
     }
-  }, [dispatch, incomingPanels]);
-
+    if (pathname === '/') {
+      dispatch(fetchPanels());
+    }
+  }, [dispatch, incomingPanels, pathname]);
   return panels.map(panel => (
     <Trip key={panel.id}>
       <Panel panel={panel} />

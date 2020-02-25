@@ -269,7 +269,7 @@ router
           });
       }
     } else {
-      Panel.find({})
+      Panel.find({ parentId: null })
         .populate('authorId')
         .then(panelsArray => {
           const panelsToReturnPojo = {};
@@ -300,8 +300,7 @@ router
               likes,
               comments
             };
-
-            if (RestructuredPanel.parentId === null) {
+            if (RestructuredPanel.parentId === null || RestructuredPanel.parentId === undefined) {
               panelsToReturnPojo[RestructuredPanel.id] = RestructuredPanel;
             }
           });

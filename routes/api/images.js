@@ -31,7 +31,6 @@ router.post('/', upload.single('photo'), (req, res) => {
   res.send(`/api/images/${key}`);
 });
 router.get('/:id', (req, res) => {
-  console.log(req.params.id);
   s3.getObject({ Bucket: S3_BUCKET, Key: req.params.id }, function(err, data) {
     if (err) {
       return res.status(500).send(err);
