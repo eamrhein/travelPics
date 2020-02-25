@@ -5,7 +5,7 @@ import { fetchPanel, clearPanelState } from '../../../actions/panel_actions';
 import { fetchChildren } from '../../../actions/children_actions';
 import { like, unlike } from '../../../actions/user_actions';
 import { Container, Main, SideBar, Trip } from '../../../styles/theme';
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import BranchIndex from './branches/branch_index';
 import styled from 'styled-components';
 import Panel from '../panel';
