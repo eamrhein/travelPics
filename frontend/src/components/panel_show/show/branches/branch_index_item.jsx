@@ -1,6 +1,6 @@
-import React from 'react';
-import { Img, SmallImg } from '../../../../styles/theme';
-import styled from 'styled-components';
+import React from 'react'
+import { Img, SmallImg } from '../../../../styles/theme'
+import styled from 'styled-components'
 let BranchDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,24 +36,34 @@ let BranchDiv = styled.div`
       display: none;
     }
   }
-`;
+`
 const BranchIndexItem = ({ child, i, index, setIndex }) => {
+  const [isLoaded, setIsLoaded] = React.useState(false)
   return (
     <>
       {child ? (
         <BranchDiv>
+          <SmallImg style={{ visibility: isLoaded ? "hidden" : "visible" }} />
           <SmallImg
             onClick={() => setIndex(i)}
+            style={{ opacity: isLoaded ? 1 : 0 }}
             className={i === index ? 'active  thumb-holder' : 'thumb-holder'}
           >
-            <Img className="panel-thumb" src={child.photoURL} alt={child.title} />
+            <Img
+              className='panel-thumb'
+              onLoad={() => {
+                setIsLoaded(true)
+              }}
+              src={child.photoURL}
+              alt={child.title}
+            />
           </SmallImg>
         </BranchDiv>
       ) : (
         ''
       )}
     </>
-  );
-};
+  )
+}
 
-export default BranchIndexItem;
+export default BranchIndexItem

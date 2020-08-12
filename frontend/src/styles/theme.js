@@ -156,6 +156,7 @@ const NavItems = styled.ul`
 `;
 // img
 const Img = styled.img`
+  background-color: gray;
   max-width: 100%;
   max-height: 100%;
   display: flex;
