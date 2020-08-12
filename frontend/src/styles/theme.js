@@ -42,7 +42,9 @@ const SideBar = styled.div`
     background: transparent; /* Optional: just make scrollbar invisible */
   }
   @media (max-width: 900px) {
-    width: 90%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
     min-height: 40vh;
     margin-left: auto;
     margin-right: auto;
@@ -176,13 +178,15 @@ const Trip = styled.div`
   background-color: #fff;
   margin-bottom: 5vh;
   @media (max-width: 900px) {
-    margin-bottom: 5vh;
+    margin-bottom: 3vh;
+    align-items: center;
   }
 `;
 const TripTitle = styled.div`
   margin: 5px 10px 5px 10px;
   padding: 0;
   height: 45px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -211,9 +215,6 @@ const TripImg = styled.div`
   justify-content: center;
   margin-bottom: 30px;
   object-fit: cover;
-  img {
-    max-height: 500px;
-  }
 `;
 
 const TripComments = styled.div`
